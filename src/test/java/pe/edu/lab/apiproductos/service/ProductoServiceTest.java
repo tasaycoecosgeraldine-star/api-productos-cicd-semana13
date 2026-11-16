@@ -95,4 +95,59 @@ class ProductoServiceTest {
 
         assertFalse(eliminado);
     }
+
+
+    @Test
+    void testCrearProductosConIdsUnicos() {
+        Producto producto1 = new Producto(
+            null, "Monitor", 450.00, 10
+        );
+
+        Producto producto2 = new Producto(
+            null, "Impresora", 650.00, 5
+        );
+
+        Producto creado1 = productoService.crear(producto1);
+        Producto creado2 = productoService.crear(producto2);
+
+        assertNotNull(creado1.getId());
+        assertNotNull(creado2.getId());
+        assertNotEquals(creado1.getId(), creado2.getId());
+        assertEquals(3L, creado1.getId());
+        assertEquals(4L, creado2.getId());
+    }
+
+
+    @Test
+    void testActualizarNombreYPrecio() {
+        Producto productoActualizado = new Producto(
+            null, "Teclado Mecanico", 150.00, 12
+        );
+
+        var resultado = productoService.actualizar(
+            1L, productoActualizado
+        );
+
+        assertTrue(resultado.isPresent());
+        assertEquals(1L, resultado.get().getId());
+        assertEquals("Teclado Mecanico",
+            resultado.get().getNombre());
+        assertEquals(150.00,
+            resultado.get().getPrecio(), 0.001);
+    }
+
+
+    @Test
+    void testBuscarProductoDespuesDeEliminar() {
+        boolean eliminado = productoService.eliminar(1L);
+
+        assertTrue(eliminado);
+        assertTrue(productoService.buscar(1L).isEmpty());
+
+        boolean eliminadoNuevamente =
+            productoService.eliminar(1L);
+
+        assertFalse(eliminadoNuevamente);
+    }
+
 }

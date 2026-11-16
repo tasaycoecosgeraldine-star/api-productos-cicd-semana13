@@ -1,9 +1,10 @@
 
-name: CI - API Productos Java
+name: StockLab - CI y Reporte Visual
 
 on:
   push:
     branches: [main]
+
   pull_request:
     branches: [main]
 
@@ -12,28 +13,50 @@ permissions:
 
 jobs:
   pruebas:
-    name: Pruebas JUnit con Maven
+    name: Pruebas JUnit y Dashboard
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar codigo
-        uses: actions/checkout@v7
+
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
 
       - name: Configurar Java 17
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
           cache: maven
 
-      - name: Ejecutar pruebas automatizadas
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Ejecutar pruebas JUnit
+        id: tests
+        continue-on-error: true
         run: mvn -B clean test
 
-      - name: Publicar reportes JUnit
+      - name: Generar dashboard visual
         if: always()
-        uses: actions/upload-artifact@v7
+        run: python generar_reporte.py
+
+      - name: Publicar reporte visual StockLab
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: reporte-pruebas-junit
-          path: target/surefire-reports/
+          name: stocklab-reporte-visual
+          path: target/stocklab-dashboard/
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Verificar resultado de las pruebas
+        if: always()
+        run: |
+          if [ "${{ steps.tests.outcome }}" != "success" ]; then
+            echo "Las pruebas JUnit fallaron"
+            exit 1
+          fi
+
+          echo "Todas las pruebas JUnit fueron aprobadas"

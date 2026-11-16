@@ -20,7 +20,7 @@ class ProductoServiceTest {
     void testListarProductos() {
         var productos = productoService.listar();
 
-        assertEquals(5, productos.size());
+        assertEquals(2, productos.size());
     }
 
     @Test

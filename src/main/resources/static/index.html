@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockLab 2.0 | Inventario Inteligente</title>
+<link rel="stylesheet" href="/css/stocklab.css">
+</head>
+<body>
+
+<div class="app">
+<div class="shell">
+
+<header class="navbar">
+    <div class="logo">STOCK<span>LAB.</span></div>
+
+    <nav class="menu" aria-label="Navegación">
+        <button id="navDashboard" class="active" type="button">Dashboard</button>
+        <button id="navInventario" type="button">Inventario</button>
+        <button id="navResumen" type="button">Resumen</button>
+        <a class="menu-link" href="/api/productos">Catálogo</a>
+    </nav>
+
+    <div class="nav-actions">
+        <div id="apiStatus" class="status">● Verificando API</div>
+        <button class="btn btn-white" id="btnNuevoTop" type="button">
+            + Nuevo producto
+        </button>
+    </div>
+</header>
+
+<div id="notice" class="notice" role="status" hidden></div>
+
+<!-- DASHBOARD -->
+
+<section id="vistaDashboard" class="vista">
+    <div class="hero">
+        <div>
+            <span class="eyebrow">Sistema inteligente de inventario</span>
+            <h1>STOCKLAB™</h1>
+            <h2>Tu inventario, bajo control.</h2>
+
+            <p>
+                Registra, administra y supervisa tus productos
+                desde una plataforma moderna conectada
+                a una API REST desarrollada con Spring Boot.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn btn-orange" id="btnVerInventario" type="button">
+                    Explorar inventario
+                </button>
+                <button class="btn btn-white" id="btnNuevoHero" type="button">
+                    + Registrar producto
+                </button>
+            </div>
+        </div>
+
+        <div class="mascot-area">
+            <div class="mascot-glow"></div>
+            <div class="mascot-circle"></div>
+            <img src="/img/mascota.png"
+                 class="mascot-img"
+                 alt="Panda principal de StockLab saludando">
+
+            <div class="float-card float-one">
+                <small>Productos registrados</small>
+                <strong id="floatingProducts">0</strong>
+            </div>
+            <div class="float-card float-two">
+                <small>Unidades disponibles</small>
+                <strong id="floatingStock">0</strong>
+            </div>
+            <div class="float-card float-three">
+                <small>Gestión inteligente</small>
+                <strong>CRUD ✓</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">Panel de control</span>
+                <h2>Tu inventario en números</h2>
+                <p>Indicadores actualizados desde la API REST.</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Productos registrados</div>
+                <div class="stat-value" id="dashProductos">0</div>
+                <div class="stat-detail">Total de productos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unidades en stock</div>
+                <div class="stat-value" id="dashStock">0</div>
+                <div class="stat-detail">Existencias acumuladas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Valor del inventario</div>
+                <div class="stat-value" id="dashValor">S/ 0.00</div>
+                <div class="stat-detail">Precio por cantidad</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Stock bajo</div>
+                <div class="stat-value" id="dashBajo">0</div>
+                <div class="stat-detail">Productos con 1 a 5 unidades</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Productos registrados</h3>
+                    <p>Consulta rápida de productos.</p>
+                </div>
+                <div class="toolbar">
+                    <input id="buscarDashboard" class="search"
+                           type="search" placeholder="Buscar producto...">
+                    <button id="btnNuevoDashboard" class="btn btn-orange"
+                            type="button">+ Nuevo producto</button>
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaDashboard"></tbody>
+                </table>
+            </div>
+            <div id="dashboardVacio" class="empty-message" hidden>
+                No se encontraron productos.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INVENTARIO -->
+
+<section id="vistaInventario" class="vista content" hidden>
+    <div class="feature-hero">
+        <div>
+            <span class="eyebrow">Control de existencias</span>
+            <h2>Gestión de Inventario</h2>
+            <p>
+                Administra, organiza y controla tus productos
+                desde una plataforma inteligente.
+            </p>
+            <div class="hero-buttons">
+                <button id="btnNuevoInventario" class="btn btn-orange"
+                        type="button">
+                    + Registrar producto
+                </button>
+            </div>
+        </div>
+
+        <div class="mascot-area">
+            <div class="mascot-glow"></div>
+            <div class="mascot-circle"></div>
+            <img src="/img/mascota-inventario.png"
+                 class="mascot-img"
+                 alt="Panda de StockLab haciendo pulgar arriba">
+            <div class="float-card">
+                ✓ Inventario bajo control
+            </div>
+        </div>
+    </div>
+
+    <div class="mini-grid">
+        <div class="mini-card">
+            <span>Productos registrados</span>
+            <strong id="invProductos">0</strong>
+        </div>
+        <div class="mini-card">
+            <span>Productos con stock bajo</span>
+            <strong id="invBajo">0</strong>
+        </div>
+        <div class="mini-card">
+            <span>Productos agotados</span>
+            <strong id="invAgotados">0</strong>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h3>Listado de productos</h3>
+                <p>Consulta, filtra, registra, edita y elimina.</p>
+            </div>
+            <div class="toolbar">
+                <input id="buscarInventario" class="search"
+                       type="search" placeholder="Buscar por ID o nombre...">
+                <select id="filtroStock" class="filter">
+                    <option value="todos">Todos</option>
+                    <option value="disponibles">Disponibles</option>
+                    <option value="bajo">Stock bajo</option>
+                    <option value="agotados">Agotados</option>
+                </select>
+                <button id="btnActualizarInventario" class="btn btn-white"
+                        type="button">↻ Actualizar</button>
+            </div>
+        </div>
+
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Precio unitario</th>
+                        <th>Existencias</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaInventario"></tbody>
+            </table>
+        </div>
+        <div id="inventarioVacio" class="empty-message" hidden>
+            No se encontraron productos.
+        </div>
+    </div>
+</section>
+
+<!-- RESUMEN -->
+
+<section id="vistaResumen" class="vista content" hidden>
+    <div class="feature-hero">
+        <div>
+            <span class="eyebrow">Análisis de inventario</span>
+            <h2>Resumen Inteligente</h2>
+            <p>
+                Explora los indicadores, estadísticas y gráficos
+                de tu inventario en tiempo real.
+            </p>
+            <div class="hero-buttons">
+                <button id="btnActualizarResumen" class="btn btn-white"
+                        type="button">↻ Actualizar</button>
+                <button id="btnExportar" class="btn btn-orange"
+                        type="button">↓ Exportar CSV</button>
+            </div>
+        </div>
+
+        <div class="mascot-area">
+            <div class="mascot-glow"></div>
+            <div class="mascot-circle"></div>
+            <img src="/img/mascota-resumen.png"
+                 class="mascot-img"
+                 alt="Panda de StockLab celebrando">
+            <div class="float-card">
+                ✨ ¡Todo bajo control!
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Productos</div>
+            <div class="stat-value" id="resProductos">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Unidades</div>
+            <div class="stat-value" id="resUnidades">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Valor total</div>
+            <div class="stat-value" id="resValor">S/ 0.00</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Stock bajo</div>
+            <div class="stat-value" id="resBajo">0</div>
+        </div>
+    </div>
+
+    <div class="analytics-grid">
+        <div class="analytics-panel">
+            <h3>Existencias por producto</h3>
+            <p>Comparación de unidades por producto.</p>
+            <div id="graficoBarras"></div>
+        </div>
+        <div class="analytics-panel">
+            <h3>Distribución del inventario</h3>
+            <p>Estado general de los productos.</p>
+            <div class="donut" id="graficoDonut">
+                <div class="donut-center">
+                    <div>
+                        <strong id="donutTotal">0</strong>
+                        Productos
+                    </div>
+                </div>
+            </div>
+            <div class="legend-row">
+                <span>🟢 Disponibles</span>
+                <strong id="leyendaDisponibles">0</strong>
+            </div>
+            <div class="legend-row">
+                <span>🟠 Stock bajo</span>
+                <strong id="leyendaBajo">0</strong>
+            </div>
+            <div class="legend-row">
+                <span>🔴 Agotados</span>
+                <strong id="leyendaAgotados">0</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <span>© 2026 StockLab 2.0 | Sistema de Inventario</span>
+    <span>Calidad y Pruebas de Software · Spring Boot · API REST</span>
+</footer>
+
+</div>
+</div>
+
+<!-- MODAL REGISTRAR Y EDITAR -->
+
+<div class="modal" id="modalProducto"
+     role="dialog" aria-modal="true"
+     aria-labelledby="modalTitulo">
+    <div class="modal-content">
+        <h2 id="modalTitulo">Nuevo producto</h2>
+        <p>Completa los datos del producto.</p>
+
+        <form id="formProducto">
+            <div class="form-field">
+                <label for="nombre">Nombre del producto</label>
+                <input id="nombre" type="text" maxlength="100" required>
+            </div>
+            <div class="form-field">
+                <label for="precio">Precio (S/)</label>
+                <input id="precio" type="number" min="0"
+                       step="0.01" required>
+            </div>
+            <div class="form-field">
+                <label for="stock">Cantidad en stock</label>
+                <input id="stock" type="number" min="0"
+                       step="1" required>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelar" class="btn btn-outline"
+                        type="button">Cancelar</button>
+                <button id="btnGuardar" class="btn btn-orange"
+                        type="submit">Guardar producto</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/stocklab.js" defer></script>
+</body>
+</html>

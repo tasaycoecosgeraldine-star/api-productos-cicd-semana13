@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>StockLab | Catálogo de Productos</title>
+
+    <!-- CSS externo compatible con CSP -->
+    <link rel="stylesheet" href="/css/productos.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            STOCK<span>LAB.</span>
+        </div>
+
+        
+    <nav class="menu" aria-label="Navegación principal">
+        <a href="/" class="menu-link">
+            Dashboard
+        </a>
+
+        <a href="/?vista=inventario" class="menu-link">
+            Inventario
+        </a>
+
+        <a href="/?vista=resumen" class="menu-link">
+            Resumen
+        </a>
+
+        <a href="/api/productos"
+        class="menu-link active"
+        aria-current="page">
+            Catálogo
+        </a>
+    </nav>
+
+        <div class="api-status" id="estadoAPI">
+            ● Consultando API
+        </div>
+
+    </header>
+
+    <!-- PRESENTACIÓN DEL CATÁLOGO -->
+
+    <section class="hero">
+
+        <div>
+
+            <span class="tag">
+                API REST · SPRING BOOT
+            </span>
+
+            <h1>
+                Catálogo de Productos
+            </h1>
+
+            <p class="description">
+                Consulta los productos registrados en
+                StockLab desde nuestra API REST.
+                Visualiza sus identificadores, nombres,
+                precios y cantidades disponibles.
+            </p>
+
+            <div class="api-address">
+                GET /api/productos
+            </div>
+
+        </div>
+
+        <!-- PANDA DEL CATÁLOGO -->
+
+        <div class="panda-box">
+
+            <div class="circle"></div>
+
+            <img
+                src="/img/mascota-producto.png"
+                class="panda"
+                alt="Panda mascota del catálogo de StockLab"
+            >
+
+        </div>
+
+    </section>
+
+    <!-- PANEL DE PRODUCTOS -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Productos registrados
+                </h2>
+
+                <p>
+                    Datos obtenidos directamente de la API.
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <input
+                    id="buscar"
+                    type="search"
+                    placeholder="Buscar producto..."
+                    aria-label="Buscar producto"
+                >
+
+                <button
+                    id="actualizar"
+                    type="button"
+                >
+                    ↻ Actualizar
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- TABLA DE PRODUCTOS -->
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO</th>
+                        <th>STOCK</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabla"></tbody>
+
+            </table>
+
+        </div>
+
+        <!-- MENSAJE SIN PRODUCTOS -->
+
+        <div
+            class="empty-message"
+            id="sinDatos"
+            role="status"
+            hidden
+        >
+            No se encontraron productos.
+        </div>
+
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+
+    <footer>
+        © 2026 StockLab · Calidad y Pruebas de Software
+    </footer>
+
+</div>
+
+<!-- JAVASCRIPT EXTERNO COMPATIBLE CON CSP -->
+
+<script src="/js/productos.js" defer></script>
+
+</body>
+</html>
